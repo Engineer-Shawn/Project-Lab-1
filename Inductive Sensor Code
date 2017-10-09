@@ -1,0 +1,60 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 10/03/2017 05:27:08 PM
+// Design Name: 
+// Module Name: Motor_Driver
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+//module Motor_Driver(
+//    input sw1,sw2,sw3,sw4,sw5,sw6,
+//    output ENA,ENB,IN1,IN2,IN3,IN4
+//    );
+    
+//    // Right Side
+//    assign ENA = sw1; 
+//    assign IN2 = sw5;   //Backward
+//    assign IN1 = sw6;   //Forward
+
+//    // Left Side
+//    assign ENB = sw2;
+//    assign IN4 = sw3;   //Forward
+//    assign IN3 = sw4;   //Backward
+
+// Inductive Sensors--------------------------------
+module Motor_Driver(
+    input SENR,SENL
+    //output ENA,ENB,IN1,IN2,IN3,IN4
+    
+    );
+    reg ENA,ENB,IN1,IN2,IN3,IN4;
+    always @ (posedge SENR &  SENL)
+    begin
+        assign IN1 = 1;
+        assign IN2 = 1;
+        assign ENA = 1;
+        assign ENB = 1;
+        assign IN3 = 0;
+        assign IN4 = 0;
+    end
+//        assign ENA = 1; 
+//        assign IN2 = IS1;
+//        assign IN1 = IS2; 
+//        assign ENB = 1;
+//        assign IN4 = IS1;  
+//        assign IN3 = IS2;  
+
+endmodule
