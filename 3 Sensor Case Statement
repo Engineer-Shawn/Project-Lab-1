@@ -1,0 +1,19 @@
+
+module Motor_Driver(SENL,SENM,SENR, ENA,ENB,IN1,IN2,IN3,IN4);
+input SENL,SENM,SENR;
+output reg ENA,ENB,IN1,IN2,IN3,IN4;
+    
+    // Any time anything changes, it will execute case statement
+    always @ (SENL,SENM,SENR)
+        case ({SENL,SENM,SENR})
+            3'b000: begin   IN1= 0; IN2 = 0; IN3 = 0; IN4 = 0; ENB = 0; ENA =0;   end // Stop
+            3'b111: begin   IN1= 0; IN2 = 0; IN3 = 0; IN4 = 0; ENB = 0; ENA =0;   end // Stop
+            3'b011: begin   IN1= 1; IN2 = 0; IN3 = 0; IN4 = 0; ENB = 1; ENA =1;   end // Left turn
+            3'b110: begin   IN1= 0; IN2 = 0; IN3 = 0; IN4 = 1; ENB = 1; ENA =1;   end // Right turn
+            3'b001: begin   IN1= 1; IN2 = 0; IN3 = 1; IN4 = 0; ENB = 1; ENA =1;   end // Sharp Left
+            3'b100: begin   IN1= 0; IN2 = 1; IN3 = 0; IN4 = 1; ENB = 1; ENA =1;   end // Sharp Right
+            3'b101: begin   IN1= 1; IN2 = 0; IN3 = 0; IN4 = 1; ENB = 1; ENA =1;   end // Forward  
+            default: begin  IN1= 0; IN2 = 0; IN3 = 0; IN4 = 0; ENB = 1; ENA =1;   end // default
+        endcase
+endmodule
+// Created by ALP and CODY :)
