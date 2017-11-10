@@ -1,0 +1,49 @@
+
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 11/10/2017 03:12:03 PM
+// Design Name: 
+// Module Name: top
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module top(
+    input clk,signal,SENL,SENM,SENR,color,
+    output ENA,ENB,IN1,IN2,IN3,IN4
+    );
+    
+    Freq_Counter(
+        .clk(clk),
+        .signal(signal),
+        .color(color)
+        );
+            
+    Motor_Driver(
+        SENL,
+        SENM,
+        SENR,
+        color,
+        ENA,
+        ENB,
+        IN1,
+        IN2,
+        IN3,
+        IN4   
+   );
+    
+endmodule
