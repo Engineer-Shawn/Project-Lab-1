@@ -1,0 +1,161 @@
+
+
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 10/03/2017 05:27:08 PM
+// Design Name: 
+// Module Name: Motor_Driver
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+// ----------------- Working ----------------------------
+//module Motor_Driver(
+//    input sw1,sw2,sw3,sw4,sw5,sw6,
+//    output ENA,ENB,IN1,IN2,IN3,IN4
+//    );
+    
+//    // Right Side
+//    assign ENA = sw1; 
+//    assign IN2 = sw5;   //Backward
+//    assign IN1 = sw6;   //Forward
+
+//    // Left Side
+//    assign ENB = sw2;
+//    assign IN4 = sw3;   //Forward
+//    assign IN3 = sw4;   //Backward
+//    endmodule
+
+
+// Inductive Sensors --- Working -------------------------------
+//module Motor_Driver(
+//    input SENR,SENL,SENM,
+//    output ENA,ENB,IN1,IN2,IN3,IN4
+//    );
+
+//    //Right Side
+//    assign ENA = 1;
+//    assign IN2 = 0;         //Backward
+//    assign IN1 = SENR;      //Forward
+//    //Left Side
+//    assign ENB = 1;
+//    assign IN4 = SENL;      //Forward
+//    assign IN3 = 0;         //Backward
+//endmodule
+// Case Statements ----NOT WORKING--------------------------------------
+
+//module Motor_Driver(
+//    input SENR,SENL,SENM,
+//    output ENA,ENB,IN1,IN2,IN3,IN4
+//    );
+//    always @ (SENR, SENM, SENL)
+//    case (SENR&SENM&SENL)
+//          3'b000 : begin ENA =1;ENB=1;IN1=1;IN4=1;IN3=0;IN2=0; end
+//    endcase
+//endmodule
+
+//------------------------------------------------
+
+//module Motor_Driver(
+//input SENL,SENM,SENR,
+//output ENA,ENB,IN1,IN2,IN3,IN4
+//);
+//    //reg SENL,SENM,SENR;
+//    wire w0,w1,w2,w3;
+//    wire y0,y1,y2,y3;
+    
+//    //Right Side
+//    assign ENA = 1;
+//    //assign IN2 = 0;         //Backward
+//    //assign IN1 = SENR;      //Forward
+    
+//    //Left Side
+//    assign ENB = 1;
+//    //assign IN4 = SENL;      //Forward
+//    //assign IN3 = 0;         //Backward
+    
+//    assign IN1 = ~IN2;
+//    assign IN3 = ~IN4;
+//    //assign IN1 = temp_SENR;
+//    //assign IN4 = temp_SENL;
+//    // Left Side 
+//    and (w0,~SENM,~SENL,~SENR);
+//    and (w1,~SENM,~SENL,SENR);
+//    and (w2,SENM,~SENL,~SENR);
+//    and (w3,SENM,~SENL,SENR);
+//    or (IN4,w0,w1,w2,w3);     // Outputing for Left Side using IN4
+
+//    // Right Side
+//    and (y0,~SENM,~SENL,~SENR);
+//    and (y1,~SENM,SENL,~SENR);
+//    and (y2,SENM,~SENL,SENR);
+//    and (y3,SENM,SENL,~SENR);
+//    or (IN1,y0,y1,y2,y3);     // Outputing for Left Side using IN1
+      
+//   // LM = (!SENM&!SENL&!SENR) + (!SENM&!SENL&SENR) + (SENM&!SENL&!SENR) + (SENM&!SENL&SENR);
+//   // RM = (!SENM&!SENL&!SENR) + (!SENM&SENL&!SENR) + (SENM&!SENL&SENR) + (SENM&SENL&!SENR);
+    
+//    //assign SENR = temp_SENR;
+//    //assign SENL = temp_SENL;    
+//endmodule
+
+
+// ----Case Statement WORKING---------------------------------------------------
+
+module Motor_Driver(
+input SENL,SENM,SENR,color,
+output ENA,ENB,IN1,IN2,IN3,IN4
+);
+
+//wire f_to_motor =color;
+//wire c1;
+//Freq_Counter(
+//    .clk(clk),
+//    .signal(signal),
+//    .color(c1)
+//    );
+reg t_ENA,t_ENB,t_IN1,t_IN2,t_IN3,t_IN4;
+//    and (c1,ENA,ENB);
+always @ (*) begin
+     if (color)
+           begin   t_IN1= 0; t_IN2 = 0; t_IN3 = 0; t_IN4 = 0; t_ENB = 1; t_ENA =1;   end // COLOR STOP
+     else
+       begin t_IN1= 0; t_IN2 = 0; t_IN3 = 0; t_IN4 = 0; t_ENB = 1; t_ENA =1; end
+end
+
+    // Any time anythbeing changes, it will execute case statement
+    always @ (SENL,SENM,SENR)
+        case ({SENL,SENM,SENR})
+            //3'b000: begin   IN1= 0; IN2 = 0; IN3 = 0; IN4 = 0; ENB = 1; ENA =1;   end // COLOR STOP
+           
+            3'b000: begin   t_IN1= 1; t_IN2 = 0; t_IN3 = 0; t_IN4 = 1; t_ENB = 1; t_ENA =1;   end // Forward
+            3'b111: begin   t_IN1= 1; t_IN2 = 0; t_IN3 = 0; t_IN4 = 1; t_ENB = 1; t_ENA =1;   end // Forward
+            3'b011: begin   t_IN1= 1; t_IN2 = 0; t_IN3 = 1; t_IN4 = 0; t_ENB = 1; t_ENA =1;   end // Left turn (Sharp)
+            3'b110: begin   t_IN1= 0; t_IN2 = 1; t_IN3 = 0; t_IN4 = 1; t_ENB = 1; t_ENA =1;   end // Right turn (Sharp)
+            3'b001: begin   t_IN1= 1; t_IN2 = 0; t_IN3 = 1; t_IN4 = 0; t_ENB = 1; t_ENA =1;   end // Sharp Left
+            3'b100: begin   t_IN1= 0; t_IN2 = 1; t_IN3 = 0; t_IN4 = 1; t_ENB = 1; t_ENA =1;   end // Sharp Right
+            3'b101: begin   t_IN1= 1; t_IN2 = 0; t_IN3 = 0; t_IN4 = 1; t_ENB = 1; t_ENA =1;   end // Forward  
+            //default: begin  IN1= 1; IN2 = 0; IN3 = 0; IN4 = 1; ENB = 1; ENA =1;   end // default Forward
+     // 1 = Not Detected
+     // 0 = Detected      
+        endcase
+assign ENA = t_ENA;
+assign ENB = t_ENB;
+assign IN1 = t_IN1;
+assign IN2 = t_IN2;
+assign IN3 = t_IN3;
+assign IN4 = t_IN4;
+endmodule
