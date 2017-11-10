@@ -1,0 +1,29 @@
+
+module Freq_Counter(
+    input clk,
+    input signal,
+    output color
+    );
+    reg temp_color;
+    reg red=3300;
+    reg [20:0]count;
+    reg clock;
+    initial begin 
+        temp_color = 0;
+        count = 0;
+    end
+    
+    always @ (*)
+    begin
+    if(signal == 1)
+         count <= count + 1'b1;
+      
+    if (count > 3300 && count < 5300)
+        begin
+            temp_color = 1;   
+            count = 0;
+        end
+    end 
+    assign color = temp_color;
+endmodule
+
